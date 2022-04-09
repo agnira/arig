@@ -1,10 +1,6 @@
-from cgitb import text
-import imp
+from bpy import types
 
-
-import bpy
-
-class UI_PT_AR_Arig(bpy.types.Panel):
+class UI_PT_AR_Arig(types.Panel):
     bl_idname = "UI_PT_AR_Arig"
     bl_label = "Asign Rig"
     bl_category = "arig"
@@ -14,7 +10,7 @@ class UI_PT_AR_Arig(bpy.types.Panel):
 
     def draw(self, context):
         # get data
-        obj = bpy.context.active_object
+        obj = context.active_object
 
         layout = self.layout
 
@@ -42,7 +38,7 @@ class UI_PT_AR_Arig(bpy.types.Panel):
 
 
 
-class UI_PT_Gen_Arig(bpy.types.Panel):
+class UI_PT_Gen_Arig(types.Panel):
     bl_idname = "UI_PT_Gen_Arig"
     bl_label = "Generator"
     bl_category = "arig"

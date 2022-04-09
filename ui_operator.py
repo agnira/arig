@@ -1,9 +1,6 @@
-from math import fabs
-from sqlite3 import connect
-from bpy import context, types
+from bpy import types
 import bmesh
 from . import common
-
 
 class ARIG_OT_register_rig(types.Operator):
     bl_idname = "arig.register_rig"
@@ -41,7 +38,7 @@ class ARIG_OT_unregister_rig(types.Operator):
     bl_label = "Unregister Rig"
     bl_description = "Remove all Arig realted tool"
 
-    def execute(self, _):
+    def execute(self, context):
         obj = context.active_object
         arm = obj.data
         pb = obj.pose.bones
@@ -70,13 +67,7 @@ class ARIG_OT_unregister_rig(types.Operator):
 
         return {'FINISHED'}
 
-
-
-        
-
-
-
-class ARIG_OT_gen_from_mesh(bpy.types.Operator):
+class ARIG_OT_gen_from_mesh(types.Operator):
     bl_idname = "arig.gen_from_mesh"
     bl_label = "Generate Rig From Mesh"
     bl_description = "Generate rig flow from mesh. This is can be usefull for creating hair or cloth rig"

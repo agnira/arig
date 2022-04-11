@@ -1,5 +1,4 @@
 from bpy import types
-import bmesh
 from . import common
 
 class ARIG_OT_register_rig(types.Operator):
@@ -26,10 +25,10 @@ class ARIG_OT_register_rig(types.Operator):
         arm["foot_r"] = "Foot.R"
         #
 
-        common.asign_ik(obj, eb, pb, arm["forearm_l"], arm["hand_l"], "arm_l")
-        common.asign_ik(obj, eb, pb, arm["forearm_r"], arm["hand_r"], "arm_r")
-        common.asign_ik(obj, eb, pb, arm["leg_l"], arm["foot_l"], "leg_l")
-        common.asign_ik(obj, eb, pb, arm["leg_r"], arm["foot_r"], "leg_r")
+        common.asign_ik(obj, eb, pb, arm["forearm_l"], arm["hand_l"], "arm_l", context)
+        common.asign_ik(obj, eb, pb, arm["forearm_r"], arm["hand_r"], "arm_r", context)
+        common.asign_ik(obj, eb, pb, arm["leg_l"], arm["foot_l"], "leg_l", context)
+        common.asign_ik(obj, eb, pb, arm["leg_r"], arm["foot_r"], "leg_r", context)
 
         return {'FINISHED'}
 

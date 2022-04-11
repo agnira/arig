@@ -1,8 +1,7 @@
-from math import degrees, pi
+from math import pi
 import random
 import string
-from tokenize import String
-from bpy import ops, types, context as ctx
+from bpy import ops, types
 from mathutils import Vector
 
 charset = string.ascii_letters+string.digits
@@ -16,8 +15,8 @@ def rand_str(length=8) -> str:
     return s
 
 
-def asign_ik(obj: types.Object, eb: types.ArmatureEditBones,  pb: types.PoseBone, ik: str, target: str, type: str):
-    ctx.object.pose.use_mirror_x = False
+def asign_ik(obj: types.Object, eb: types.ArmatureEditBones,  pb: types.PoseBone, ik: str, target: str, type: str, context: types.Context):
+    context.object.pose.use_mirror_x = False
 
     pole_angle = pi * 0.0 / 180
     if type == "arm_r":
@@ -28,7 +27,7 @@ def asign_ik(obj: types.Object, eb: types.ArmatureEditBones,  pb: types.PoseBone
     ik_target_name = "IK."+target
     if not ((ik_target_name in pb)):
         edit_mode()
-        ctx.object.data.use_mirror_x = False
+        context.object.data.use_mirror_x = False
         ik_target = eb.new(ik_target_name)
         ik_target.length = eb[target].length
         ik_target.matrix = eb[target].matrix.copy()
@@ -39,7 +38,7 @@ def asign_ik(obj: types.Object, eb: types.ArmatureEditBones,  pb: types.PoseBone
     ik_pole_name = "Pole."+target
     if not ((ik_pole_name in pb)):
         edit_mode()
-        ctx.object.data.use_mirror_x = False
+        context.object.data.use_mirror_x = False
         ik_pole = eb.new(ik_pole_name)
         ik_pole.use_deform = False
         ik_pole.parent = eb[ik_target_name]

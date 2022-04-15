@@ -1,7 +1,7 @@
 from math import pi
 import random
 import string
-from bpy import ops, types
+from bpy import ops, types, context
 from mathutils import Vector
 
 charset = string.ascii_letters+string.digits
@@ -15,7 +15,7 @@ def rand_str(length=8) -> str:
     return s
 
 
-def asign_ik(obj: types.Object, eb: types.ArmatureEditBones,  pb: types.PoseBone, ik: str, target: str, type: str, context: types.Context):
+def asign_ik(obj: types.Object, eb: types.ArmatureEditBones,  pb: types.PoseBone, ik: str, target: str, type: str, context: context):
     context.object.pose.use_mirror_x = False
 
     pole_angle = pi * 0.0 / 180
@@ -65,8 +65,6 @@ def asign_ik(obj: types.Object, eb: types.ArmatureEditBones,  pb: types.PoseBone
     ikc.use_tail = True
     ikc.use_stretch = True
     ikc.pole_angle = pole_angle
-    print(pole_angle)
-    print(ikc.pole_angle)
 
     ct = pb[target].constraints.get('Copy Transforms')
     if ct == None:
@@ -74,8 +72,31 @@ def asign_ik(obj: types.Object, eb: types.ArmatureEditBones,  pb: types.PoseBone
     ct.target = obj
     ct.subtarget = ik_target_name
 
+
+def switch_ik_fk(arm: types.ID, pb: types.PoseBone, ik: str, ct: str, ikt: str, influence: int):
+    ikc: types.KinematicConstraint = pb[ik].constraints.get("IK")
+    ikc.influence = influence
+    ctc: types.CopyTransformsConstraint = pb[ct].constraints.get("Copy Transforms")
+    ctc.influence = influence
+    if influence == 0:
+        pb["IK."+ct].bone.hide = True
+        pb["Pole."+ct].bone.hide = True
+        pb[ik].bone.hide = False
+        pb[ik].parent.bone.hide = False
+        pb[ct].bone.hide = False
+        arm[ikt] = False
+    elif influence > 0:
+        pb["IK."+ct].bone.hide = False
+        pb["Pole."+ct].bone.hide = False
+        pb[ik].bone.hide = True
+        pb[ik].parent.bone.hide = True
+        pb[ct].bone.hide = True
+        arm[ikt] = True
+
+
 def edit_mode():
     ops.object.mode_set(mode='EDIT', toggle=False)
+
 
 def object_mode():
     ops.object.mode_set(mode='OBJECT', toggle=False)

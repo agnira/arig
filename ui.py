@@ -1,4 +1,4 @@
-from bpy import types
+from bpy import types, context
 
 class UI_PT_AR_Arig(types.Panel):
     bl_idname = "UI_PT_AR_Arig"
@@ -8,7 +8,12 @@ class UI_PT_AR_Arig(types.Panel):
     bl_region_type = 'UI'
     bl_options = {'DEFAULT_CLOSED'}
 
-    def draw(self, context):
+    @classmethod
+    def poll(cls, context: context):
+        if context.active_object.type == "ARMATURE" :
+            return True
+
+    def draw(self, context: context):
         # get data
         obj = context.active_object
 
@@ -36,7 +41,26 @@ class UI_PT_AR_Arig(types.Panel):
             #     row = layout.row(align=True)
             #     row.label(text=bone.name)
 
+class UI_PT_Gen_Arig_Ui(types.Panel):
+    bl_idname = "UI_PT_Gen_Arig_Ui"
+    bl_label = "Rig UI"
+    bl_parent_id = "UI_PT_AR_Arig"
+    bl_category = "arig"
+    bl_space_type = 'VIEW_3D'
+    bl_region_type = 'UI'
+    bl_options = {'DEFAULT_CLOSED'}
 
+    @classmethod
+    def poll(cls, context: context):
+        if context.active_object.data.get("arig_id"):
+            return True
+    def draw(self, context: context):
+        arm = context.active_object.data
+        layout = self.layout
+
+        row = layout.row(align=True)
+        row.operator("arig.ik_fk", depress=arm["hand_ik_l"] ,text="Hand IK/FK L").bone = "hand_l"
+        row.operator("arig.ik_fk", depress=arm["hand_ik_r"] ,text="Hand IK/FK R").bone = "hand_r"
 
 class UI_PT_Gen_Arig(types.Panel):
     bl_idname = "UI_PT_Gen_Arig"

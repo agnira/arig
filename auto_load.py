@@ -1,6 +1,4 @@
-import os
 import bpy
-import sys
 import typing
 import inspect
 import pkgutil
@@ -119,7 +117,6 @@ def get_dependency_from_annotation(value):
                 return value[1]["type"]
     return None
 
-
 def iter_my_deps_from_parent_id(cls, my_classes_by_idname):
     if bpy.types.Panel in cls.__bases__:
         parent_idname = getattr(cls, "bl_parent_id", None)
@@ -128,14 +125,12 @@ def iter_my_deps_from_parent_id(cls, my_classes_by_idname):
             if parent_cls is not None:
                 yield parent_cls
 
-
 def iter_my_classes(modules):
     base_types = get_register_base_types()
     for cls in get_classes_in_modules(modules):
         if any(base in base_types for base in cls.__bases__):
             if not getattr(cls, "is_registered", False):
                 yield cls
-
 
 def get_classes_in_modules(modules):
     classes = set()
@@ -144,12 +139,10 @@ def get_classes_in_modules(modules):
             classes.add(cls)
     return classes
 
-
 def iter_classes_in_module(module):
     for value in module.__dict__.values():
         if inspect.isclass(value):
             yield value
-
 
 def get_register_base_types():
     return set(getattr(bpy.types, name) for name in [
@@ -159,7 +152,6 @@ def get_register_base_types():
         "UIList", "RenderEngine",
         "Gizmo", "GizmoGroup",
     ])
-
 
 # Find order to register to solve dependencies
 #################################################
